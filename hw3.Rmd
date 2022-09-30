@@ -1,0 +1,99 @@
+---
+title: "Business Forecasting HW 3 - Sriven Sikhinam"
+output:
+  html_document:
+    df_print: paged
+---
+Take the data set from HW3 and perform the Forecasting Methods we went over during class. (Please refer to Lecture_4.Rmd file).
+
+- Business Forecasting HW 3 
+dataset: auscafe 
+
+auscafe - this data is a compilation of Monthly expenditures on eating out in Australia. Data is modeled from April 1982 - September 2017 and it is in the scale of Billion Dollar Amt. 
+
+```{r}
+library(fpp)
+library(fpp2)
+library(TTR)
+df = auscafe
+attributes(df)
+```
+```{r}
+plot(df)
+```
+```{r}
+Acf(df)
+```
+```{r}
+mean_forecast = meanf(df, 5)
+plot(mean_forecast)
+```
+```{r}
+naive_forecast = naive(df, 5)
+plot(naive_forecast)
+```
+```{r}
+#Random Walk 
+rwf_forecast = rwf(df,5)
+rwf_forecast = rwf(df,5, drift = TRUE)
+```
+```{r}
+#Seasonal Naive
+snaive_forecast = snaive(elecequip,5)
+```
+```{r}
+#Moving Averages 
+MA5_forecast = ma(df, order = 5)
+MA9_forecast = ma(df, order = 9)
+```
+```{r}
+#plot all in a single chart 
+plot(mean_forecast)
+lines(naive_forecast$mean, col = "red")
+lines(rwf_forecast$mean, col = "green")
+lines(snaive_forecast$mean, col = "black")
+lines(MA5_forecast, col = "Pink")
+lines(MA9_forecast, col = "Blue")
+```
+```{r}
+#what other attributes are there?
+attributes(naive_forecast)
+```
+```{r}
+#Decomposition 
+ets_forecast = ets(df)
+plot(df)
+```
+```{r}
+attributes(ets_forecast)
+```
+```{r}
+ets_forecast$mse
+```
+```{r}
+#HoltWinters 
+HW_forecast = HoltWinters(df)
+plot(df)
+```
+```{r}
+SSE_Simple = HoltWinters(df, beta = FALSE, gamma = FALSE)
+attributes(SSE_Simple)
+```
+```{r}
+plot(SSE_Simple)
+```
+```{r}
+SSE_Simple$SSE
+```
+```{r}
+head(SSE_Simple$fitted)
+```
+```{r}
+forecast_ets_1 = forecast.ets(ets_forecast, h= 5)
+plot(forecast_ets_1)
+forecast_ets_2 = forecast(ets_forecast, h = 5)
+plot(forecast_ets_2)
+```
+
+
+The forecast ets method really gives a good prediction on the time series dataset as it resembles closer to the past behavior of the model. 
